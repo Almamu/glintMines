@@ -78,7 +78,10 @@ public class Tablero implements Serializable
 	{
 		// unas comprobaciones de seguridad extra para evitar que el jugador lo haga muy
 		// facil o muy dificil
-		if(this.getMinas() < Tablero.minimoMinas(this.getColumnas(), this.getFilas())) throw new TableroInvalidoException();
+		if(
+			this.getMinas() < Tablero.minimoMinas(this.getColumnas(), this.getFilas()) ||
+			this.getMinas() > Tablero.maximoMinas(this.getColumnas(), this.getFilas())
+		  ) throw new TableroInvalidoException();
 		
 		// se asegura de que todas las casillas se dejan de usar
 		// para que el recolector de basura las elimine
@@ -169,10 +172,34 @@ public class Tablero implements Serializable
 	 */
 	public static int minimoMinas(int columnas, int filas)
 	{
-		// TODO: Calcular esto de alguna forma
-		return 0;
+		int casillas = columnas * filas;
+		int casillas_base = 15 * 15;
+		
+		return (15 * casillas) / casillas_base;
 	}
 
+	/**
+	 * Indica el numero maximo de minas que puede tener un tablero
+	 * con las proporciones indicadas
+	 * 
+	 * @param columnas Columnas que tiene el tablero
+	 * @param filas Filas que tiene el tablero
+	 * 
+	 * @return Numero de minas maximas
+	 */
+	public static int maximoMinas(int columnas, int filas)
+	{
+		int maximo = (int)(columnas * filas * 0.9f);
+		int minimo = minimoMinas(columnas, filas);
+		
+		if(maximo < minimo)
+		{
+			return minimo;
+		}
+		
+		return maximo;
+	}
+	
 	/**
 	 * @return Cantidad de minas
 	 */

@@ -88,6 +88,11 @@ public class ConfigSwing extends JDialog
 	private int mMinas = 0;
 	
 	/**
+	 * Controla si el boton "Salir/Cancelar" fue pulsado
+	 */
+	private boolean mCancel = false;
+	
+	/**
 	 * Lanza el dialogo como si fuese una aplicacion
 	 * independiente del resto (usado para debug)
 	 */
@@ -95,7 +100,7 @@ public class ConfigSwing extends JDialog
 	{
 		try
 		{
-			ConfigSwing dialog = new ConfigSwing();
+			ConfigSwing dialog = new ConfigSwing(TraduccionesSwing.ConfigWindow.WELCOME_MESSAGE);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		}
@@ -130,9 +135,17 @@ public class ConfigSwing extends JDialog
 	}
 	
 	/**
+	 * @return Indica si se pulso sobre "cancelar"
+	 */
+	public boolean wasCanceled()
+	{
+		return this.mCancel;
+	}
+	
+	/**
 	 * Crea el dialogo (codigo autogenerado por el diseñador de eclipse)
 	 */
-	public ConfigSwing()
+	public ConfigSwing(String dialogo)
 	{
 		// configuracion del dialogo modal
 		setResizable(false);
@@ -152,7 +165,7 @@ public class ConfigSwing extends JDialog
 			panel = new JPanel();
 			contentPanel.add(panel);
 			{
-				JLabel explicacionLabel = new JLabel("<html>" + TraduccionesSwing.ConfigWindow.WELCOME_MESSAGE + "</html>");
+				JLabel explicacionLabel = new JLabel("<html>" + dialogo + "</html>");
 				panel.add(explicacionLabel);
 			}
 		}
@@ -242,6 +255,7 @@ public class ConfigSwing extends JDialog
 							return;
 						}
 						
+						mCancel = false;
 						setVisible(false);
 					}
 				});
@@ -254,7 +268,8 @@ public class ConfigSwing extends JDialog
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e)
 					{
-						System.exit(0);
+						mCancel = true;
+						setVisible(false);
 					}
 				});
 				cancelButton.setActionCommand(TraduccionesSwing.ConfigWindow.CANCEL_BUTTON);

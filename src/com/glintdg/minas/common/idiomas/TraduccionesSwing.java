@@ -7,7 +7,7 @@ public class TraduccionesSwing
 		public static final String TITLE = "GlintMine v1.0 ByAlmamu";
 		public static final String LOOSE_TITLE = "Game over";
 		public static final String LOOSE_TEXT = "¡Lastima! Has pisado una mina. Tu puntuacion es de %d. ¿Quieres empezar de nuevo?";
-		public static final String WIN_TEXT = "'¡Enhorabuena! ¡Has completado el juego correctamente! Tu puntuacion es de %d puntos";
+		public static final String WIN_TEXT = "¡Enhorabuena! ¡Has completado el juego correctamente! Tu puntuacion es de %d puntos";
 		
 		public static class MainMenu
 		{
@@ -28,10 +28,11 @@ public class TraduccionesSwing
 		public static final String TITLE = "Iniciar juego";
 		public static final String OK_BUTTON = "Aceptar";
 		public static final String CANCEL_BUTTON = "Salir";
-		public static final String WELCOME_MESSAGE = "¡Bienvenido!<br />"
+		public static final String WELCOME_MESSAGE = "¡Bienvenido! "
 				+ "Antes de empezar a jugar es necesario que introduzcas el nivel de dificultad deseado<br />"
 				+ "especificando el numero de minas, filas y columnas que deseas para tu partida. <br/>"
 				+ "Ten en cuenta que esto afectara a tu puntuación final. <br />"
 				+ "¡Buena suerte!";
+		public static final String LEVEL_CHANGE_MESSAGE = "Elije la nueva dificultad de juego";
 	}
 }

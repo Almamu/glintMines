@@ -102,27 +102,51 @@ public class JuegoSwing implements Controlador
 
 	/**
 	 * Inicia el tablero de juego, usando la configuracion que el usuario introduzca
+	 * 
+	 * @param msg Mensaje que mostrar al jugador
+	 * @param force Fuerza el mostrar el dialogo
 	 */
-	protected void iniciarJuego()
+	protected void configurarPartida(String msg, boolean force)
 	{
-		try
-		{
-			if(Minas == 0 && Columnas == 0 && Filas == 0)
+		int filas = Filas, columnas = Columnas, minas = Minas;
+		ConfigSwing config = new ConfigSwing(msg);
+		Tablero tablero = null;
+
+		do
+		{			
+			try
 			{
-				ConfigSwing config = new ConfigSwing();
+				if(force == true || (Minas == 0 && Columnas == 0 && Filas == 0))
+				{
+					config.setVisible(true);
+					filas = config.getFilas();
+					columnas = config.getColumnas();
+					minas = config.getMinas();
+					
+					if(config.wasCanceled() == true)
+					{
+						return;
+					}
+				}
 				
-				config.setVisible(true);
-				Filas = config.getFilas();
-				Columnas = config.getColumnas();
-				Minas = config.getMinas();
+				tablero = new Tablero(filas, columnas, minas, new Partida("Placeholder"));
+
+				Filas = filas;
+				Minas = minas;
+				Columnas = columnas;
+				this.mTablero = tablero;
 			}
-			
-			this.mTablero = new Tablero(Filas, Columnas, Minas, new Partida("Placeholder"));
+			catch (ArrayIndexOutOfBoundsException | TableroInvalidoException ex)
+			{
+				JOptionPane.showMessageDialog(
+					frame,
+					"El tablero ha de tener almenos " + Tablero.minimoMinas(columnas, filas) + " minas y no mas de " + Tablero.maximoMinas(columnas, filas),
+					"Error",
+					JOptionPane.OK_OPTION
+				);
+			}
 		}
-		catch (ArrayIndexOutOfBoundsException | TableroInvalidoException ex)
-		{
-			
-		}
+		while(tablero == null);
 	}
 	
 	/**
@@ -130,12 +154,7 @@ public class JuegoSwing implements Controlador
 	 */
 	protected void cambiarDificultad()
 	{
-		ConfigSwing config = new ConfigSwing();
-		
-		config.setVisible(true);
-		Filas = config.getFilas();
-		Columnas = config.getColumnas();
-		Minas = config.getMinas();
+		this.configurarPartida(TraduccionesSwing.ConfigWindow.LEVEL_CHANGE_MESSAGE, true);
 		this.reiniciar();
 	}
 	
@@ -150,7 +169,13 @@ public class JuegoSwing implements Controlador
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// inicia datos del juego como el tablero antes de mostrar la interfaz
-		this.iniciarJuego();
+		this.configurarPartida(TraduccionesSwing.ConfigWindow.WELCOME_MESSAGE, false);
+		
+		// es necesario asegurarse de que el jugador ha escogido configuracion
+		if(this.mTablero == null)
+		{
+			this.cerrar();
+		}
 		
 		// crea los controles del formulario
 		this.createControls();
