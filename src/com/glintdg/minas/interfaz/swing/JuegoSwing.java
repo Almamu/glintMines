@@ -8,6 +8,7 @@ import com.glintdg.minas.common.Controlador;
 import com.glintdg.minas.common.Partida;
 import com.glintdg.minas.common.Tablero;
 import com.glintdg.minas.common.casillas.Casilla;
+import com.glintdg.minas.common.casillas.Mina;
 import com.glintdg.minas.common.excepciones.MinaExplosionadaException;
 import com.glintdg.minas.common.excepciones.TableroInvalidoException;
 import com.glintdg.minas.common.idiomas.TraduccionesSwing;
@@ -52,7 +53,7 @@ public class JuegoSwing implements Controlador
 	/**
 	 * Dialogo usado por el juego para mostrar la interfaz
 	 */
-	private JFrame frame;
+	private JFrame mFrame;
 	
 	/**
 	 * Tablero en uso por este controlador para la partida
@@ -76,7 +77,7 @@ public class JuegoSwing implements Controlador
 				try
 				{
 					JuegoSwing window = new JuegoSwing();
-					window.frame.setVisible(true);
+					window.mFrame.setVisible(true);
 				}
 				catch (Exception e)
 				{
@@ -94,12 +95,42 @@ public class JuegoSwing implements Controlador
 		// es necesario que siempre tenga un valor y nunca nulo
 		// ya que se eliminaran y añadiran componentes al contentPane() del mism
 		// sin destruirlo
-		frame = new JFrame();
+		this.mFrame = new JFrame();
 		
 		// prepara la ventana para el juego
 		initialize();
 	}
 
+	
+	/**
+	 * Muestra el tablero original si la opcion esta habilitada
+	 */
+	protected void mostrarTableroOriginal()
+	{
+		// muestra informacion del tablero por consola, de forma simple y entendible
+		// para poder asegurarnos de que todos los datos del tablero son correctos
+		for(int y = 0; y < 15; y ++)
+		{
+			for(int x = 0; x < 15; x ++)
+			{
+				Casilla casilla = this.mTablero.getCasillaAt(y, x);
+				
+				if(casilla instanceof Mina)
+				{
+					System.out.print("M ");
+				}
+				else
+				{
+					System.out.print(casilla.getMinasCercanas() + " ");
+				}
+			}
+			
+			System.out.println();
+		}
+		
+		System.out.println("---------------");
+	}
+	
 	/**
 	 * Inicia el tablero de juego, usando la configuracion que el usuario introduzca
 	 * 
@@ -139,7 +170,7 @@ public class JuegoSwing implements Controlador
 			catch (ArrayIndexOutOfBoundsException | TableroInvalidoException ex)
 			{
 				JOptionPane.showMessageDialog(
-					frame,
+					this.mFrame,
 					"El tablero ha de tener almenos " + Tablero.minimoMinas(columnas, filas) + " minas y no mas de " + Tablero.maximoMinas(columnas, filas),
 					"Error",
 					JOptionPane.OK_OPTION
@@ -164,9 +195,9 @@ public class JuegoSwing implements Controlador
 	private void initialize()
 	{
 		// configuración basica del dialogo usado para mostrar el juego
-		frame.setTitle(TraduccionesSwing.MainWindow.TITLE);
-		frame.setBounds(100, 100, 652, 496);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.mFrame.setTitle(TraduccionesSwing.MainWindow.TITLE);
+		this.mFrame.setBounds(100, 100, 652, 496);
+		this.mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// inicia datos del juego como el tablero antes de mostrar la interfaz
 		this.configurarPartida(TraduccionesSwing.ConfigWindow.WELCOME_MESSAGE, false);
@@ -186,9 +217,9 @@ public class JuegoSwing implements Controlador
 	 */
 	private void reiniciar()
 	{
-		frame.getContentPane().removeAll();
-		frame.getContentPane().revalidate();
-		frame.getContentPane().repaint();
+		this.mFrame.getContentPane().removeAll();
+		this.mFrame.getContentPane().revalidate();
+		this.mFrame.getContentPane().repaint();
 		this.initialize();
 	}
 	
@@ -197,7 +228,7 @@ public class JuegoSwing implements Controlador
 	 */
 	private void cerrar()
 	{
-		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+		this.mFrame.dispatchEvent(new WindowEvent(this.mFrame, WindowEvent.WINDOW_CLOSING));
 	}
 	
 	/**
@@ -205,9 +236,13 @@ public class JuegoSwing implements Controlador
 	 */
 	private void createControls()
 	{
+		// primero es necesario configurar el tamaño del panel que contiene el grid
+		this.mFrame.setSize(16 * this.mTablero.getColumnas(), 18 * this.mTablero.getFilas());
+		this.mFrame.setResizable(false);
+		
 		// barra de menu para el juego con acciones
 		JMenuBar menuBar = new JMenuBar();
-		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
+		this.mFrame.getContentPane().add(menuBar, BorderLayout.NORTH);
 		
 		// primera entrada del menu
 		JMenu mnJuego = new JMenu(TraduccionesSwing.MainWindow.MainMenu.MENU_ENTRY1);
@@ -249,7 +284,7 @@ public class JuegoSwing implements Controlador
 
 		// configura la vista a usar para mostrar las casillas disponibles
 		this.mGrid = new TableroSwing(this, this.mTablero);
-		frame.getContentPane().add(this.mGrid);
+		this.mFrame.getContentPane().add(this.mGrid);
 	}
 
 	/**
@@ -264,7 +299,7 @@ public class JuegoSwing implements Controlador
 		this.mGrid.onMinaExplosionada();
 		this.actualizar();
 		
-		int result = JOptionPane.showConfirmDialog(frame, String.format(TraduccionesSwing.MainWindow.LOOSE_TEXT, this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+		int result = JOptionPane.showConfirmDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.LOOSE_TEXT, (int)this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if(result != JOptionPane.OK_OPTION)
 		{
@@ -325,7 +360,7 @@ public class JuegoSwing implements Controlador
 	{
 		if(this.getCasillasDescubiertas() == this.getNumeroCasillasVacias())
 		{
-			JOptionPane.showMessageDialog(frame, String.format(TraduccionesSwing.MainWindow.WIN_TEXT, this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.WIN_TEXT, (int)this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			this.reiniciar();
 		}
 	}

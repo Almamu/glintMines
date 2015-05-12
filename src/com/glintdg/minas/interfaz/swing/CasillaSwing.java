@@ -4,6 +4,8 @@ import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import com.glintdg.minas.common.Controlador;
@@ -23,6 +25,36 @@ public class CasillaSwing extends JButton
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Lista de iconos posibles para los botones
+	 */
+	private ImageIcon[] mIcons = null;
+	
+	/**
+	 * Indice del icono "unknown" para las casillas
+	 */
+	private static final int ICON_UNKNOWN = 0;
+	
+	/**
+	 * Indice del icono "empty" para las casillas
+	 */
+	private static final int ICON_EMPTY = 1;
+	
+	/**
+	 * Indice del icono "marked" para las casillas
+	 */
+	private static final int ICON_MARKED = 2;
+	
+	/**
+	 * Indice del icono "mine_revealed" para las casillas
+	 */
+	private static final int ICON_MINE = 3;
+	
+	/**
+	 * Cantidad maxima de iconos posibles
+	 */
+	private static final int ICON_MAX = 4;
 
 	/**
 	 * Casilla del tablero a la que este boton apunta
@@ -43,7 +75,7 @@ public class CasillaSwing extends JButton
 	{
 		this.setCasilla(casilla);
 		this.setControlador(controlador);
-		this.setMargin(new Insets(1, 1, 1, 1));
+		this.setMargin(new Insets(0, 0, 0, 0));
 		this.setup();
 	}
 	
@@ -92,14 +124,21 @@ public class CasillaSwing extends JButton
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
+				setIcon(mIcons[ICON_EMPTY]);
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
+				actualizar();
 			}
 		});
 		
+		this.loadIcons();
+		this.setIcon(this.mIcons[ICON_UNKNOWN]);
+		this.setHorizontalTextPosition(CENTER);
+		this.setBorder(BorderFactory.createEmptyBorder());
+		this.setContentAreaFilled(false);
 		this.actualizar();
 	}
 	
@@ -113,11 +152,11 @@ public class CasillaSwing extends JButton
 		{
 			if(this.getCasilla().isMarcada() == true)
 			{
-				this.setText("M");
+				this.setIcon(this.mIcons[ICON_MARKED]);
 			}
 			else
 			{
-				this.setText("*");
+				this.setIcon(this.mIcons[ICON_UNKNOWN]);
 			}
 			
 			return;
@@ -125,7 +164,8 @@ public class CasillaSwing extends JButton
 		
 		if(this.getCasilla() instanceof Mina)
 		{
-			this.setText("X");
+			this.setIcon(this.mIcons[ICON_MINE]);
+			return;
 		}
 		else if(this.getCasilla().getMinasCercanas() > 0)
 		{
@@ -136,7 +176,8 @@ public class CasillaSwing extends JButton
 			this.setText("");
 		}
 		
-		this.setEnabled(false);
+		// this.setEnabled(false);
+		this.setIcon(this.mIcons[ICON_EMPTY]);
 	}
 	
 	/**
@@ -173,5 +214,18 @@ public class CasillaSwing extends JButton
 	private void setControlador(Controlador controlador)
 	{
 		this.mControlador = controlador;
+	}
+	
+	/**
+	 * @return Lista de iconos disponibles para el boton
+	 */
+	private void loadIcons()
+	{
+		this.mIcons = new ImageIcon[ICON_MAX];
+		
+		this.mIcons[ICON_UNKNOWN] = new ImageIcon(this.getClass().getResource("/resources/unknown.png"));
+		this.mIcons[ICON_EMPTY] = new ImageIcon(this.getClass().getResource("/resources/empty.png"));
+		this.mIcons[ICON_MARKED] = new ImageIcon(this.getClass().getResource("/resources/marked.png"));
+		this.mIcons[ICON_MINE] = new ImageIcon(this.getClass().getResource("/resources/mine_revealed.png"));
 	}
 }

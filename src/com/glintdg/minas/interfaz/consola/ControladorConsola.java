@@ -199,6 +199,6 @@ public abstract class ControladorConsola implements Controlador
 	 */
 	public int getPuntos()
 	{
-		return this.getTablero().getPartida().getPuntos();
+		return Math.round(this.getTablero().getPartida().getPuntos());
 	}
 }

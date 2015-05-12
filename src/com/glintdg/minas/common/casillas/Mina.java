@@ -33,11 +33,11 @@ public class Mina extends Casilla
 	{
 		if(this.isMarcada() == true)
 		{
-			this.getTablero().getPartida().givePuntos(-Constantes.MINEMARK_POINTS);
+			this.getTablero().getPartida().givePuntos(-(Constantes.MINEMARK_POINTS * this.getTablero().getDificultad()));
 		}
 		else
 		{
-			this.getTablero().getPartida().givePuntos(Constantes.MINEMARK_POINTS);
+			this.getTablero().getPartida().givePuntos(Constantes.MINEMARK_POINTS * this.getTablero().getDificultad());
 		}
 		
 		super.marcar();

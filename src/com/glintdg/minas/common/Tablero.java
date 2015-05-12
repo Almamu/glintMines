@@ -153,7 +153,7 @@ public class Tablero implements Serializable
 					}
 				}
 				
-				System.out.println("Casilla en (" + columna + ", " + fila + ") tiene " + cercanas.length + " alrededor y " + minasCercanas + " minas");
+				// System.out.println("Casilla en (" + columna + ", " + fila + ") tiene " + cercanas.length + " alrededor y " + minasCercanas + " minas");
 				
 				// por ultimo esta casilla ya puede ser actualizada con las minas cercanas
 				this.mCasillas[fila][columna].setMinasCercanas(minasCercanas);
@@ -198,6 +198,17 @@ public class Tablero implements Serializable
 		}
 		
 		return maximo;
+	}
+	
+	/**
+	 * Califica la dificultad del tablero  
+	 *  
+	 * @return
+	 */
+	public float getDificultad()
+	{
+		int casillas = this.getFilas() * this.getColumnas();
+		return (float)this.getMinas() / (float)casillas * 10.0f;
 	}
 	
 	/**
@@ -321,7 +332,7 @@ public class Tablero implements Serializable
 		
 		ArrayList<Casilla> casillas = new ArrayList<Casilla>();
 		
-		System.out.print("Buscando desde (" + (columna - 1) + ", " + (fila - 1) + ") hasta (" + (columna + 1) + ", " + (fila + 1) + ") - ");
+		// System.out.print("Buscando desde (" + (columna - 1) + ", " + (fila - 1) + ") hasta (" + (columna + 1) + ", " + (fila + 1) + ") - ");
 		
 		for(int y = fila - 1; y <= fila + 1; y ++)
 		{

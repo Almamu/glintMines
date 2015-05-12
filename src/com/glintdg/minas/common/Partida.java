@@ -19,7 +19,7 @@ public class Partida implements Serializable
 	/**
 	 * Puntos obtenidos en esta partida
 	 */
-	private int mPuntos = 0;
+	private float mPuntos = 0;
 	
 	/**
 	 * Tablero asignado a la partida
@@ -34,7 +34,7 @@ public class Partida implements Serializable
 	public Partida(String nombre)
 	{
 		this.setNombre(nombre);
-		this.setPuntos(0);
+		this.setPuntos(0.0f);
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class Partida implements Serializable
 	 * 
 	 * @param quantity
 	 */
-	public void givePuntos(int quantity)
+	public void givePuntos(float quantity)
 	{
 		this.mPuntos += quantity;
 	}
@@ -50,7 +50,7 @@ public class Partida implements Serializable
 	/**
 	 * @return Cantidad de puntos obtenida hasta ahora
 	 */
-	public int getPuntos()
+	public float getPuntos()
 	{
 		return this.mPuntos;
 	}
@@ -60,7 +60,7 @@ public class Partida implements Serializable
 	 * 
 	 * @param puntos
 	 */
-	protected void setPuntos(int puntos)
+	protected void setPuntos(float puntos)
 	{
 		this.mPuntos = puntos;
 	}

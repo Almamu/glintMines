@@ -29,7 +29,7 @@ public class Vacia extends Casilla
 		
 		// se marca como descubierta
 		this.setDescubierta();
-		this.getTablero().getPartida().givePuntos(Constantes.DISCOVER_POINTS);
+		this.getTablero().getPartida().givePuntos(Constantes.DISCOVER_POINTS * this.getTablero().getDificultad());
 		
 		if(this.getMinasCercanas() > 0) return;
 		
@@ -53,7 +53,7 @@ public class Vacia extends Casilla
 	{
 		if(this.isMarcada() == false)
 		{
-			this.getTablero().getPartida().givePuntos(Constantes.WRONGMARK_POINTS);
+			this.getTablero().getPartida().givePuntos(Constantes.WRONGMARK_POINTS * this.getTablero().getDificultad());
 		}
 		
 		super.marcar();
