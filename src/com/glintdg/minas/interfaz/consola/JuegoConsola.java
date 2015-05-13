@@ -5,6 +5,11 @@ import java.util.Scanner;
 import com.glintdg.minas.common.excepciones.TableroInvalidoException;
 import com.glintdg.minas.common.idiomas.TraduccionesConsola;
 
+/**
+ * Cuerpo del codigo del juego para la consola
+ * 
+ * @author Almamu
+ */
 public class JuegoConsola extends ControladorConsola
 {
 	/**

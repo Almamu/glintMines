@@ -2,6 +2,11 @@ package com.glintdg.minas.common;
 
 import java.io.Serializable;
 
+/**
+ * Información de una partida en curso 
+ * 
+ * @author Almamu
+ */
 public class Partida implements Serializable
 {
 	/**

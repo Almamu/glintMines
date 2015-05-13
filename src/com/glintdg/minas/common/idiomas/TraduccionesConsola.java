@@ -1,5 +1,10 @@
 package com.glintdg.minas.common.idiomas;
 
+/**
+ * Localizacion de los mensajes mostrados por el juego en consola
+ * 
+ * @author Almamu
+ */
 public class TraduccionesConsola
 {
 	public static final String WELCOME_MSG = "Bienvenido a 1.0 ByAlmamu, ¿como te llamas?: ";

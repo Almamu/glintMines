@@ -1,5 +1,10 @@
 package com.glintdg.minas.common.idiomas;
 
+/**
+ * Localizacion de la interfaz grafica del juego
+ * 
+ * @author Almamu
+ */
 public class TraduccionesSwing
 {
 	public static class MainWindow

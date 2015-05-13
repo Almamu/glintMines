@@ -1,5 +1,10 @@
 package com.glintdg.minas.common.idiomas;
 
+/**
+ * Localizacion de los mensajes de debug
+ * 
+ * @author Almamu
+ */
 public class Traducciones
 {
 	public static final String EXCEPTION_OUT_OF_BOUNDS = "La coordenada (%d, %d) está fuera de los límites";

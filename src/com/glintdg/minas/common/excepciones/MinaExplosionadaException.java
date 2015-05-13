@@ -3,6 +3,11 @@ package com.glintdg.minas.common.excepciones;
 import com.glintdg.minas.common.casillas.Mina;
 import com.glintdg.minas.common.idiomas.Traducciones;
 
+/**
+ * Excepcion generada cuando se "descubre" una mina
+ * 
+ * @author Almamu
+ */
 public class MinaExplosionadaException extends Exception
 {
 	private static final long serialVersionUID = 1L;

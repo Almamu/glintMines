@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
+/**
+ * Gestion del ranking general de juego
+ * 
+ * @author Almamu
+ */
 public class Ranking
 {
 	/**
