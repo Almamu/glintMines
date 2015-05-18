@@ -1,6 +1,9 @@
 package com.glintdg.minas.common;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,14 +18,14 @@ import com.glintdg.minas.common.idiomas.Traducciones;
  * 
  * @author Almamu
  */
-public class Tablero implements Serializable
+public class Tablero implements Externalizable
 {
 	/**
 	 * Version de la clase para la serializacion
 	 * 
 	 * IMPORTANTE ACTUALIZAR ESTO AL HACER CAMBIOS
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/**
 	 * Numero de filas
@@ -71,6 +74,10 @@ public class Tablero implements Serializable
 		this.generar();
 	}
 
+	public Tablero()
+	{
+	}
+	
 	/**
 	 * Genera un tablero completamente nuevo eliminando el existente
 	 */
@@ -264,9 +271,10 @@ public class Tablero implements Serializable
 	 * 
 	 * @param partida
 	 */
-	private void setPartida(Partida partida)
+	void setPartida(Partida partida)
 	{
 		this.mPartida = partida;
+		this.mPartida.setTablero(this);
 	}
 	
 	/**
@@ -363,5 +371,35 @@ public class Tablero implements Serializable
 		Casilla[] salida = new Casilla[casillas.size()];
 		
 		return casillas.toArray(salida);
+	}
+	
+	/**
+	 * Personaliza la escritura de esta clase en un fichero
+	 * 
+	 * @param stream Stream usado para la escritura
+	 * @throws IOException
+	 */
+	@Override
+	public void writeExternal(ObjectOutput stream) throws IOException
+	{
+		stream.writeInt(this.getFilas());
+		stream.writeInt(this.getColumnas());
+		stream.writeInt(this.getMinas());
+	}
+	
+	/**
+	 * Personaliza la lectura de esta clase desde un fichero
+	 * 
+	 * @param stream Stream usado para la lectura
+	 * 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	@Override
+	public void readExternal(ObjectInput stream) throws IOException, ClassNotFoundException
+	{
+		this.setFilas(stream.readInt());
+		this.setColumnas(stream.readInt());
+		this.setMinas(stream.readInt());
 	}
 }

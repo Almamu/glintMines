@@ -6,9 +6,11 @@ import javax.swing.JFrame;
 
 import com.glintdg.minas.common.Controlador;
 import com.glintdg.minas.common.Partida;
+import com.glintdg.minas.common.Ranking;
 import com.glintdg.minas.common.Tablero;
 import com.glintdg.minas.common.casillas.Casilla;
 import com.glintdg.minas.common.casillas.Mina;
+import com.glintdg.minas.common.excepciones.FueraDeRankingException;
 import com.glintdg.minas.common.excepciones.MinaExplosionadaException;
 import com.glintdg.minas.common.excepciones.TableroInvalidoException;
 import com.glintdg.minas.common.idiomas.TraduccionesSwing;
@@ -281,6 +283,12 @@ public class JuegoSwing implements Controlador
 		// segundo menu que muestra la ayuda del juego asi como la version del mismo
 		JMenu mnAyuda = new JMenu(TraduccionesSwing.MainWindow.MainMenu.MENU_ENTRY2);
 		menuBar.add(mnAyuda);
+		
+		JMenuItem mntmRanking = new JMenuItem("Ranking");
+		mnAyuda.add(mntmRanking);
+		
+		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
+		mnAyuda.add(mntmAcercaDe);
 
 		// configura la vista a usar para mostrar las casillas disponibles
 		this.mGrid = new TableroSwing(this, this.mTablero);
@@ -299,6 +307,7 @@ public class JuegoSwing implements Controlador
 		this.mGrid.onMinaExplosionada();
 		this.actualizar();
 		
+		this.comprobarRanking();
 		int result = JOptionPane.showConfirmDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.LOOSE_TEXT, (int)this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
 		if(result != JOptionPane.OK_OPTION)
@@ -354,6 +363,28 @@ public class JuegoSwing implements Controlador
 	}
 	
 	/**
+	 * Comprueba si la partida en curso puede entrar al ranking del juego
+	 * Y lo añade si es necesario
+	 */
+	public void comprobarRanking()
+	{
+		try
+		{
+			int position = Ranking.checkRanking(this.getTablero().getPartida());
+			int result = JOptionPane.showConfirmDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.RANKING_TEXT, position + 1), TraduccionesSwing.MainWindow.RANKING_TITLE, JOptionPane.YES_NO_OPTION);
+			
+			if(result == JOptionPane.OK_OPTION)
+			{
+				Ranking.addToRanking(this.getTablero().getPartida());
+			}
+		}
+		catch(FueraDeRankingException ex)
+		{
+			
+		}
+	}
+	
+	/**
 	 * Comprueba si el jugador ha completado con exito la partida
 	 */
 	public void comprobarFin()
@@ -361,6 +392,7 @@ public class JuegoSwing implements Controlador
 		if(this.getCasillasDescubiertas() == this.getNumeroCasillasVacias())
 		{
 			JOptionPane.showMessageDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.WIN_TEXT, (int)this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.INFORMATION_MESSAGE);
+			this.comprobarRanking();
 			this.reiniciar();
 		}
 	}

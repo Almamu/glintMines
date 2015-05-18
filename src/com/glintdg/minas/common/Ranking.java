@@ -1,9 +1,15 @@
 package com.glintdg.minas.common;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+
+import com.glintdg.minas.common.excepciones.FueraDeRankingException;
 
 public class Ranking
 {
@@ -13,12 +19,54 @@ public class Ranking
 	private static ArrayList<Partida> mPartidas = Ranking.loadRanking();
 	
 	/**
+	 * Cierra un InputStream de forma "bonita" (para evitar usar excepciones)
+	 * 
+	 * @param stream Stream a cerrar
+	 */
+	private static void closeQuietly(InputStream stream)
+	{
+		if(stream != null)
+		{
+			try
+			{
+				stream.close();
+			}
+			catch(IOException ex)
+			{
+				
+			}
+		}
+	}
+	
+	/**
+	 * Cierra un OutputStream de forma "bonita" (para evitar usar excepciones)
+	 * 
+	 * @param stream Stream a cerrar
+	 */
+	private static void closeQuietly(OutputStream stream)
+	{
+		if(stream != null)
+		{
+			try
+			{
+				stream.close();
+			}
+			catch(IOException ex)
+			{
+				
+			}
+		}
+	}
+	
+	/**
 	 * Carga el ranking a partir de un fichero
 	 * 
 	 * @return Lista de los 10 mejores en el ranking
 	 */
 	private static ArrayList<Partida> loadRanking()
 	{
+		System.out.println("Cargando partidas...");
+		
 		int partidasCargadas = 0;
 		ArrayList<Partida> tmp = new ArrayList<Partida>();
 		FileInputStream stream = null;
@@ -36,28 +84,27 @@ public class Ranking
 				if(data instanceof Partida)
 				{
 					tmp.add(partidasCargadas ++, (Partida) data);
+					
+					Partida p = (Partida) data;
+					
+					System.out.println("Puntos: " + p.getPuntos() + ", Nombre: " + p.getNombre() + ", Filas: " + p.getTablero().getFilas() + ", Columnas: " + p.getTablero().getColumnas());
 				}
 			}
 		}
 		catch(ClassNotFoundException ex)
 		{
 			System.err.println("No se pudo cargar el ranking por completo");
+			ex.printStackTrace();
 		}
 		catch(IOException ex)
 		{
 			System.err.println("No se pudo cargar el ranking por completo");
+			ex.printStackTrace();
 		}
 		finally
 		{
-			try
-			{
-				obj.close();
-				stream.close();
-			}
-			catch(IOException ex)
-			{
-				
-			}
+			closeQuietly(obj);
+			closeQuietly(stream);
 		}
 		
 		return tmp;
@@ -91,11 +138,84 @@ public class Ranking
 	{
 		sort();
 		
-		if(mPartidas.get(0).getPuntos() < partida.getPuntos())
+		if(mPartidas.size() < Constantes.RANKING_SIZE)
 		{
 			mPartidas.add(partida);
 		}
+		else if(mPartidas.get(0).getPuntos() < partida.getPuntos())
+		{
+			mPartidas.add(0, partida);
+		}
 		
+		save();
+	}
+	
+	/**
+	 * Guarda el ranking al fichero de texto correspondiente
+	 */
+	public static void save()
+	{
 		sort();
+		
+		FileOutputStream stream = null;
+		ObjectOutputStream obj = null;
+		
+		try
+		{
+			stream = new FileOutputStream(Constantes.RANKING_FILE);
+			obj = new ObjectOutputStream(stream);
+			
+			for(int i = 0; i < mPartidas.size(); i ++)
+			{
+				obj.writeObject(mPartidas.get(i));
+			}
+			
+			obj.flush();
+		}
+		catch(IOException ex)
+		{
+			System.out.println("No se puede guardar el ranking por completo");
+		}
+		finally
+		{
+			closeQuietly(obj);
+			closeQuietly(stream);
+		}
+	}
+	
+	/**
+	 * Comprueba si la partida puede entrar dentro del Ranking
+	 * 
+	 * @param partida Partida a comprobar
+	 * @return Posicion en la que entra
+	 * 
+	 * @throws FueraDeRankingException Excepcion lanzada cuando la partida no entra en el Ranking
+	 */
+	public static int checkRanking(Partida partida) throws FueraDeRankingException
+	{
+		sort();
+		
+		if(mPartidas.size() < Constantes.RANKING_SIZE)
+		{
+			return mPartidas.size();
+		}
+		
+		for(int i = 0; i < mPartidas.size(); i ++)
+		{
+			if(mPartidas.get(i).getPuntos() < partida.getPuntos())
+			{
+				return i;
+			}
+		}
+		
+		throw new FueraDeRankingException();
+	}
+	
+	/**
+	 * @return Array con los datos del ranking
+	 */
+	public static ArrayList<Partida> get()
+	{
+		return mPartidas;
 	}
 }

@@ -8,6 +8,8 @@ public class TraduccionesSwing
 		public static final String LOOSE_TITLE = "Game over";
 		public static final String LOOSE_TEXT = "¡Lastima! Has pisado una mina. Tu puntuacion es de %d. ¿Quieres empezar de nuevo?";
 		public static final String WIN_TEXT = "¡Enhorabuena! ¡Has completado el juego correctamente! Tu puntuacion es de %d puntos";
+		public static final String RANKING_TITLE = "¡Has entrado en el ranking!";
+		public static final String RANKING_TEXT = "La puntuación obtenida está dentro de las 10 mejores, concretamente estás en el puesto %d de 10. ¿Quieres guardar tu puntuación?";
 		
 		public static class MainMenu
 		{
