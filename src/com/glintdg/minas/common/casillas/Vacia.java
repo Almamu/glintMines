@@ -4,6 +4,11 @@ import com.glintdg.minas.common.Constantes;
 import com.glintdg.minas.common.Tablero;
 import com.glintdg.minas.common.excepciones.MinaExplosionadaException;
 
+/**
+ * Clase que representa una casilla completamente vacía
+ * 
+ * @author Almamu
+ */
 public class Vacia extends Casilla
 {
 	/**

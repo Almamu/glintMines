@@ -8,9 +8,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-
 import com.glintdg.minas.common.excepciones.FueraDeRankingException;
 
+/**
+ * Gestion del ranking general de juego
+ * 
+ * @author Almamu
+ */
 public class Ranking
 {
 	/**

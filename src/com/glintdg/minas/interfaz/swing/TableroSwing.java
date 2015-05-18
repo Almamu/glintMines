@@ -167,16 +167,6 @@ public class TableroSwing extends JPanel
 	 */
 	public void onMinaExplosionada()
 	{
-		// cuando una mina explota, desactiva todos los botones para que no puedan ser usados mas
-		/*
-		for(int fila = 0; fila < this.getTablero().getFilas(); fila ++)
-		{
-			for(int columna = 0; columna < this.getTablero().getColumnas(); columna ++)
-			{
-				// this.mCasillas[fila][columna].setEnabled(false);
-			}
-		}
-		*/
 	}
 	
 	/**

@@ -1,5 +1,10 @@
 package com.glintdg.minas.common;
 
+/**
+ * Datos constantes con la configuracion del juego
+ *  
+ * @author Almamu
+ */
 public class Constantes
 {
 	public static final int DISCOVER_POINTS = 1;

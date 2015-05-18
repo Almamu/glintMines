@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+/**
+ * Información de una partida en curso 
+ * 
+ * @author Almamu
+ */
 public class Partida implements Externalizable
 {
 	/**
