@@ -285,6 +285,13 @@ public class JuegoSwing implements Controlador
 		menuBar.add(mnAyuda);
 		
 		JMenuItem mntmRanking = new JMenuItem("Ranking");
+		mntmRanking.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent arg0)
+			{
+				mostrarRanking();
+			}
+		});
 		mnAyuda.add(mntmRanking);
 		
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
@@ -312,7 +319,7 @@ public class JuegoSwing implements Controlador
 		
 		if(result != JOptionPane.OK_OPTION)
 		{
-			cerrar();
+			this.cerrar();
 		}
 		else
 		{
@@ -375,12 +382,34 @@ public class JuegoSwing implements Controlador
 			
 			if(result == JOptionPane.OK_OPTION)
 			{
-				Ranking.addToRanking(this.getTablero().getPartida());
+				String name = JOptionPane.showInputDialog(this.mFrame, "Introduce tu nombre: ", "Añadir al ranking", JOptionPane.INFORMATION_MESSAGE);
+				
+				if(name != null)
+				{
+					this.getTablero().getPartida().setNombre(name);
+					
+					Ranking.addToRanking(this.getTablero().getPartida());
+				}
 			}
 		}
 		catch(FueraDeRankingException ex)
 		{
-			
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Muestra la ventana de Ranking
+	 */
+	public void mostrarRanking()
+	{
+		if(Ranking.get().size() == 0)
+		{
+			JOptionPane.showMessageDialog(this.mFrame, "No existe ningun jugador en el ranking aun", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else
+		{
+			new RankingSwing().setVisible(true);
 		}
 	}
 	

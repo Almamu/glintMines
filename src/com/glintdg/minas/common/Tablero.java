@@ -74,6 +74,9 @@ public class Tablero implements Externalizable
 		this.generar();
 	}
 
+	/**
+	 * Constructor usado únicamente bajo la deserializacion de la clase
+	 */
 	public Tablero()
 	{
 	}

@@ -46,7 +46,7 @@ public class Partida implements Externalizable
 	}
 	
 	/**
-	 * Constructor 
+	 * Constructor usado únicamente bajo la deserializacion de la clase
 	 */
 	public Partida()
 	{
@@ -138,6 +138,9 @@ public class Partida implements Externalizable
 		stream.writeUTF(this.getNombre());
 		stream.writeFloat(this.getPuntos());
 		this.getTablero().writeExternal(stream);
+		
+		// make sure the data is written to the file
+		stream.flush();
 	}
 	
 	/**

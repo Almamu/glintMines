@@ -1,5 +1,6 @@
 package com.glintdg.minas.common;
 
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
 import com.glintdg.minas.common.excepciones.FueraDeRankingException;
 
 /**
@@ -69,10 +71,8 @@ public class Ranking
 	 */
 	private static ArrayList<Partida> loadRanking()
 	{
-		System.out.println("Cargando partidas...");
-		
 		int partidasCargadas = 0;
-		ArrayList<Partida> tmp = new ArrayList<Partida>();
+		ArrayList<Partida> tmp = new ArrayList<Partida>(Constantes.RANKING_SIZE);
 		FileInputStream stream = null;
 		ObjectInputStream obj = null;
 		
@@ -88,22 +88,20 @@ public class Ranking
 				if(data instanceof Partida)
 				{
 					tmp.add(partidasCargadas ++, (Partida) data);
-					
-					Partida p = (Partida) data;
-					
-					System.out.println("Puntos: " + p.getPuntos() + ", Nombre: " + p.getNombre() + ", Filas: " + p.getTablero().getFilas() + ", Columnas: " + p.getTablero().getColumnas());
 				}
 			}
 		}
+		catch(EOFException ex)
+		{
+			System.out.println("Cargadas " + partidasCargadas + " partidas");
+		}
 		catch(ClassNotFoundException ex)
 		{
-			System.err.println("No se pudo cargar el ranking por completo");
-			ex.printStackTrace();
+			System.err.println("No se pudo interpretar todo el fichero de partidas");
 		}
 		catch(IOException ex)
 		{
-			System.err.println("No se pudo cargar el ranking por completo");
-			ex.printStackTrace();
+			System.err.println("No se pudo interpretar todo el fichero de partidas");
 		}
 		finally
 		{
