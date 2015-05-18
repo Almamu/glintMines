@@ -61,7 +61,7 @@ public class Tablero implements Externalizable
 	 */
 	public Tablero(int filas, int columnas, int minas, Partida partida) throws TableroInvalidoException, ArrayIndexOutOfBoundsException
 	{
-		if(filas < 0 || columnas < 0) throw new TableroInvalidoException();
+		if(filas < 0 || columnas < 0 || filas > Constantes.TABLERO_ROWS_MAX || columnas > Constantes.TABLERO_COLS_MAX) throw new TableroInvalidoException();
 		
 		// primero es necesario almacenar ciertos parametros
 		this.setFilas(filas);
@@ -342,8 +342,6 @@ public class Tablero implements Externalizable
 		}
 		
 		ArrayList<Casilla> casillas = new ArrayList<Casilla>();
-		
-		// System.out.print("Buscando desde (" + (columna - 1) + ", " + (fila - 1) + ") hasta (" + (columna + 1) + ", " + (fila + 1) + ") - ");
 		
 		for(int y = fila - 1; y <= fila + 1; y ++)
 		{

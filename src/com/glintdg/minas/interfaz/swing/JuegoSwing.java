@@ -173,8 +173,8 @@ public class JuegoSwing implements Controlador
 			{
 				JOptionPane.showMessageDialog(
 					this.mFrame,
-					"El tablero ha de tener almenos " + Tablero.minimoMinas(columnas, filas) + " minas y no mas de " + Tablero.maximoMinas(columnas, filas),
-					"Error",
+					String.format(TraduccionesSwing.MainWindow.TABLERO_ERROR, Tablero.minimoMinas(columnas, filas), Tablero.maximoMinas(columnas, filas)),
+					TraduccionesSwing.ERROR_TITLE,
 					JOptionPane.OK_OPTION
 				);
 			}
@@ -223,6 +223,7 @@ public class JuegoSwing implements Controlador
 		this.mFrame.getContentPane().revalidate();
 		this.mFrame.getContentPane().repaint();
 		this.initialize();
+		this.mGrid.repaint();
 	}
 	
 	/**
@@ -239,8 +240,7 @@ public class JuegoSwing implements Controlador
 	private void createControls()
 	{
 		// primero es necesario configurar el tamaño del panel que contiene el grid
-		this.mFrame.setSize(16 * this.mTablero.getColumnas(), 18 * this.mTablero.getFilas());
-		this.mFrame.setResizable(false);
+		this.mFrame.setSize(476, 355);
 		
 		// barra de menu para el juego con acciones
 		JMenuBar menuBar = new JMenuBar();
@@ -284,7 +284,7 @@ public class JuegoSwing implements Controlador
 		JMenu mnAyuda = new JMenu(TraduccionesSwing.MainWindow.MainMenu.MENU_ENTRY2);
 		menuBar.add(mnAyuda);
 		
-		JMenuItem mntmRanking = new JMenuItem("Ranking");
+		JMenuItem mntmRanking = new JMenuItem(TraduccionesSwing.MainWindow.MainMenu.Menu2.ENTRY1);
 		mntmRanking.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent arg0)
@@ -294,7 +294,14 @@ public class JuegoSwing implements Controlador
 		});
 		mnAyuda.add(mntmRanking);
 		
-		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
+		JMenuItem mntmAcercaDe = new JMenuItem(TraduccionesSwing.MainWindow.MainMenu.Menu2.ENTRY2);
+		mntmAcercaDe.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent arg0)
+			{
+				JOptionPane.showMessageDialog(mFrame, "<html>" + TraduccionesSwing.AboutWindow.MESSAGE + "</html>", TraduccionesSwing.AboutWindow.TITLE, JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 		mnAyuda.add(mntmAcercaDe);
 
 		// configura la vista a usar para mostrar las casillas disponibles
@@ -315,7 +322,13 @@ public class JuegoSwing implements Controlador
 		this.actualizar();
 		
 		this.comprobarRanking();
-		int result = JOptionPane.showConfirmDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.LOOSE_TEXT, (int)this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+		int result = JOptionPane.showConfirmDialog(
+			this.mFrame,
+			String.format(TraduccionesSwing.MainWindow.LOOSE_TEXT, (int)this.mTablero.getPartida().getPuntos()),
+			TraduccionesSwing.MainWindow.LOOSE_TITLE,
+			JOptionPane.YES_NO_OPTION,
+			JOptionPane.INFORMATION_MESSAGE
+		);
 		
 		if(result != JOptionPane.OK_OPTION)
 		{
@@ -378,11 +391,21 @@ public class JuegoSwing implements Controlador
 		try
 		{
 			int position = Ranking.checkRanking(this.getTablero().getPartida());
-			int result = JOptionPane.showConfirmDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.RANKING_TEXT, position + 1), TraduccionesSwing.MainWindow.RANKING_TITLE, JOptionPane.YES_NO_OPTION);
+			int result = JOptionPane.showConfirmDialog(
+				this.mFrame,
+				String.format(TraduccionesSwing.MainWindow.Ranking.RANKING_TEXT, position + 1),
+				TraduccionesSwing.MainWindow.Ranking.RANKING_TITLE,
+				JOptionPane.YES_NO_OPTION
+			);
 			
 			if(result == JOptionPane.OK_OPTION)
 			{
-				String name = JOptionPane.showInputDialog(this.mFrame, "Introduce tu nombre: ", "Añadir al ranking", JOptionPane.INFORMATION_MESSAGE);
+				String name = JOptionPane.showInputDialog(
+					this.mFrame,
+					TraduccionesSwing.MainWindow.Ranking.INPUT_TEXT,
+					TraduccionesSwing.MainWindow.Ranking.INPUT_TITLE,
+					JOptionPane.INFORMATION_MESSAGE
+				);
 				
 				if(name != null)
 				{
@@ -405,7 +428,12 @@ public class JuegoSwing implements Controlador
 	{
 		if(Ranking.get().size() == 0)
 		{
-			JOptionPane.showMessageDialog(this.mFrame, "No existe ningun jugador en el ranking aun", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(
+				this.mFrame,
+				TraduccionesSwing.MainWindow.Ranking.RANKING_EMPTY_TEXT,
+				TraduccionesSwing.ERROR_TITLE,
+				JOptionPane.ERROR_MESSAGE
+			);
 		}
 		else
 		{
@@ -420,7 +448,12 @@ public class JuegoSwing implements Controlador
 	{
 		if(this.getCasillasDescubiertas() == this.getNumeroCasillasVacias())
 		{
-			JOptionPane.showMessageDialog(this.mFrame, String.format(TraduccionesSwing.MainWindow.WIN_TEXT, (int)this.mTablero.getPartida().getPuntos()), TraduccionesSwing.MainWindow.LOOSE_TITLE, JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(
+				this.mFrame,
+				String.format(TraduccionesSwing.MainWindow.WIN_TEXT, (int)this.mTablero.getPartida().getPuntos()),
+				TraduccionesSwing.MainWindow.LOOSE_TITLE,
+				JOptionPane.INFORMATION_MESSAGE
+			);
 			this.comprobarRanking();
 			this.reiniciar();
 		}

@@ -2,7 +2,6 @@ package com.glintdg.minas.interfaz.swing;
 
 import javax.swing.JDialog;
 
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
@@ -10,6 +9,10 @@ import javax.swing.table.DefaultTableModel;
 
 import com.glintdg.minas.common.Partida;
 import com.glintdg.minas.common.Ranking;
+
+import javax.swing.JScrollPane;
+
+import java.awt.GridLayout;
 
 public class RankingSwing extends JDialog
 {
@@ -40,16 +43,20 @@ public class RankingSwing extends JDialog
 	 */
 	public RankingSwing()
 	{
+		setTitle("Ranking de juego");
 		setResizable(false);
 		setModal(true);
 		setAlwaysOnTop(true);
 		setBounds(100, 100, 450, 300);
-		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		this.mTableModel = new DefaultTableModel();
+		getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
 		this.mTable = new JTable(this.mTableModel);
-		getContentPane().add(this.mTable);
+
+		JScrollPane scrollPane = new JScrollPane(this.mTable);
+		getContentPane().add(scrollPane);
+		
 		this.llenarTabla();
 	}
 	
@@ -66,11 +73,11 @@ public class RankingSwing extends JDialog
 			Partida partida = partidas.get(i);
 			
 			data[i][0] = partida.getNombre();
-			data[i][1] = partida.getPuntos();
+			data[i][1] = String.format("%.2f", partida.getPuntos());
 			data[i][2] = partida.getTablero().getFilas();
 			data[i][3] = partida.getTablero().getColumnas();
 			data[i][4] = partida.getTablero().getMinas();
-			data[i][5] = partida.getTablero().getDificultad();
+			data[i][5] = String.format("%.1f", partida.getTablero().getDificultad());
 		}
 		
 		this.mTableModel.setDataVector(data, this.mTableColumns);

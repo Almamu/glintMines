@@ -1,12 +1,16 @@
 package com.glintdg.minas.interfaz.swing;
 
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 
 import com.glintdg.minas.common.Controlador;
 import com.glintdg.minas.common.casillas.Casilla;
@@ -176,7 +180,6 @@ public class CasillaSwing extends JButton
 			this.setText("");
 		}
 		
-		// this.setEnabled(false);
 		this.setIcon(this.mIcons[ICON_EMPTY]);
 	}
 	
@@ -228,4 +231,39 @@ public class CasillaSwing extends JButton
 		this.mIcons[ICON_MARKED] = new ImageIcon(this.getClass().getResource("/resources/marked.png"));
 		this.mIcons[ICON_MINE] = new ImageIcon(this.getClass().getResource("/resources/mine_revealed.png"));
 	}
+	
+	/**
+	 * Modifica el comportamiento del dibujado del boton
+	 * para poder acoplar el icono a nuestras necesidades
+	 */
+	@Override
+    protected void paintComponent(Graphics g)
+	{
+        super.paintComponent(g);
+
+        if (this.getIcon() != null)
+        {
+        	// lo primero es necesario obtener los datos del boton
+        	// (rectangulo que dibuja) para poder dibujar el icono
+        	// a su tamaño correcto
+            Rectangle innerArea = new Rectangle();
+            SwingUtilities.calculateInnerArea(this, innerArea);
+
+            // hora de dibujar el icono
+            g.drawImage(((ImageIcon)this.getIcon()).getImage(),
+                innerArea.x, innerArea.y, innerArea.width, innerArea.height,
+                this);
+            
+            // informacion de la fuente que nos permite calcular el centro 
+            // donde dibujar el texto
+            FontMetrics metrics = g.getFontMetrics(this.getFont());
+            
+            // es necesario calcular a mano el x y el y del texto
+            int x = (innerArea.width - metrics.stringWidth(this.getText())) / 2;
+            int y = ((innerArea.height - metrics.getHeight()) / 2) + metrics.getAscent();
+            
+            // ultimo paso, dibujar el texto
+            g.drawString(this.getText(), x, y);
+        }
+    }
 }
